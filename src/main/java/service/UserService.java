@@ -30,7 +30,8 @@ public class UserService {
       throws UserNotFoundException, IncompleteUserException, DataAccessException {
     User user = userDao.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
 
-    if(     user.getAddress().getCountry() != null && !user.getAddress().getCountry().isBlank() &&
+    if(user.getAddress() != null &&
+            user.getAddress().getCountry() != null && !user.getAddress().getCountry().isBlank() &&
             user.getAddress().getCity() != null && !user.getAddress().getCity().isBlank()){
       return user;
     }
