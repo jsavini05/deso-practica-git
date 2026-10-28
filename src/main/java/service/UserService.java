@@ -10,6 +10,7 @@ import repository.dao.UserDao;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class UserService {
   private final UserDao userDao;
@@ -28,7 +29,14 @@ public class UserService {
   // Ejercicio 6
   public User getValidatedUser(String username, UserDao userDao)
       throws UserNotFoundException, IncompleteUserException, DataAccessException {
-    throw new UnsupportedOperationException("Ejercicio 6: implement getValidatedUser");
+    User user = userDao.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
+
+    if(user.getAddress() != null &&
+            user.getAddress().getCountry() != null && !user.getAddress().getCountry().isBlank() &&
+            user.getAddress().getCity() != null && !user.getAddress().getCity().isBlank()){
+      return user;
+    }
+    else throw new IncompleteUserException(username);
   }
 
   // Ejercicio 9
