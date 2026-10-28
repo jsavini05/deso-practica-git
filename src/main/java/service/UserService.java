@@ -9,6 +9,7 @@ import repository.dao.FileUserDao;
 import repository.dao.UserDao;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class UserService {
@@ -40,7 +41,16 @@ public class UserService {
 
   // Ejercicio 9
   public List<User> getUsersPresentInFileAndDao(FileUserDao fileUserDao, UserDao userDao)
-      throws DataAccessException {
-    throw new UnsupportedOperationException("Ejercicio 9: implement getUsersPresentInFileAndDao");
+          throws DataAccessException {
+    List<User> fromFile = fileUserDao.findAll(); // si falla, se propaga
+
+    List<User> result = new ArrayList<>();
+    for (User fileUser : fromFile) {
+      try {
+        userDao.findByUsername(fileUser.getUsername()).ifPresent(result::add);
+      } catch (DataAccessException e) {
+      }
+    }
+    return result;
   }
 }
